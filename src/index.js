@@ -1,20 +1,49 @@
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-const geometry = new THREE.BoxGeometry(3, 3, 3);
-const material = new THREE.MeshBasicMaterial({color: 0xFFFFFF})
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-camera.position.z = 20;
+var scene;
+var camera;
+var renderer;
+var cube;
+function init() {
+  scene = new THREE.Scene();
+  let canvasobject = document.getElementById("canvas");
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvasobject});
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  drawxyzlines(scene, camera);
+  camera.position.set(0, 0, 10);
+  camera.lookAt(0, 0, 0);
+  animate();
+  window.addEventListener("resize", resizecanvas, false);
+}
+function drawxyzlines(scene, camea) {
+  let xmaterial = new THREE.LineBasicMaterial({color:0xff0000});
+  let ymaterial = new THREE.LineBasicMaterial({color:0x00ff00});
+  let zmaterial = new THREE.LineBasicMaterial({color:0x0000ff});
+  let xpoints = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(5, 0, 0)];
+  let ypoints = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 5, 0)];
+  let zpoints = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 5)];
+  let xgeometry = new THREE.BufferGeometry().setFromPoints(xpoints);
+  let ygeometry = new THREE.BufferGeometry().setFromPoints(ypoints);
+  let zgeometry = new THREE.BufferGeometry().setFromPoints(zpoints);
+  let xline = new THREE.Line(xgeometry, xmaterial);
+  let yline = new THREE.Line(ygeometry, ymaterial);
+  let zline = new THREE.Line(zgeometry, zmaterial);
+  scene.add(xline);
+  scene.add(yline);
+  scene.add(zline);
+}
+function resizecanvas() {
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  window.setPixelRatio(window.devicePixelRatio);
+  console.log("resized!");
+}
 function animate() {
   requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
-  cube.rotation.z += 0.01;
   renderer.render(scene, camera);
+  console.log("framestep");
 }
-function orbit(plusx, plusy) {
+/*function orbit(plusx, plusy) {
   var speed = (Math.PI / 500);
   var plusphi = speed * plusx;
   var plustheta = speed * plusy;
@@ -33,10 +62,9 @@ function orbit(plusx, plusy) {
   camera.position.add(center);
   camera.lookAt(center);
   redraw();
-}
-animate();
-document.getElementById("canvas").onmouseover = function(){
-  document.getElementById("canvas").onmouseout = function(){
-    
-  }
+}*/
+
+window.onload = function() {
+  init();
+
 }
