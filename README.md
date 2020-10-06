@@ -7,4 +7,4 @@ The entire project is in the development branch so check that out if you want to
 
 
 
-what are you still reading this for everythings over there
+what are you still reading this everything is over there
